@@ -40,12 +40,12 @@ const getMovieByName = gql`
 }`
 
 
-// client.cache.writeQuery({
-//   query:createUserMutation
-//   // data{cr}
-// // fields:{
-// // }   
-// })
+client.cache.writeQuery({
+  query:createUserMutation,
+  data:{createUserMutation:{}}
+// fields:{
+// }   
+})
 
   
   const [movieSearch,setMovieSearched] = useState("")
@@ -73,8 +73,23 @@ const getMovieByName = gql`
   // const [createUserPost,{loading:createUserPostLoading}] = useMutation(createUserMutation);
   const [deleteUserPost,{data:deleteUserPostData,loading:deleteUserLoading,error:deleteUserError,refetch:deleteUserRefetch}] = useMutation(deleteUserMutation);
 
-  const [createUserPost,{loading:createUserPostLoading}] = useMutation(createUserMutation);
-  
+  const [createUserPost,{loading:createUserPostLoading}] = useMutation(createUserMutation,{
+    user: {
+      id: uuidv4(),
+      name,
+      username,
+      age: Number(age),
+      nationality
+    }
+  },{
+    update(cache,{data:{createUser}}){
+      const existingData = cache.writeQuery({
+        query:createUserMutation,
+        data:{UserList:[...existingData.UserList, createUser]}
+      })
+    }
+  });
+
   if(createUserPostLoading){
   console.log(deleteUserPostData)
 }
@@ -154,8 +169,6 @@ useEffect(()=>{
     id:deleteId
   }
 })
-refetch()
-
 }}>Delete</button>
 
 </div>

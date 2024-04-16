@@ -1,0 +1,28 @@
+import React from "react";
+
+import {useQuery,gql} from "@apollo/client"
+
+const Query_all_Users = gql`
+query queryName{
+    UserList{
+        id
+        name
+        age
+        username
+    }
+}
+`
+
+
+function DisplayData(){
+    const {data,error,loading} = useQuery(Query_all_Users)
+    return(
+        {
+            data,
+            error,
+            loading
+        }
+    )
+}
+
+export default DisplayData;

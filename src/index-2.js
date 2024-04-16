@@ -1,30 +1,26 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {ApolloProvider,ApolloClient,InMemoryCache,gql  } from "@apollo/client"
+import {ApolloProvider,ApolloClient,InMemoryCache } from "@apollo/client"
 
-const cache = new InMemoryCache({
-  typePolicies:{
-    Mutation:{
-      fields:{
-        createUser(existingData = [],incoming){
-          console.log(existingData)
-          return incoming
-        }
+const client = new ApolloClient({
+  cache: new InMemoryCache({
+    typePolicies:{
+      Query:{
+        fields:{
+          user(name){
+            return name.toUpperCase();
+          }
+        },
+          /* broadcast: false // Include this to prevent automatic query refresh */
+
       }
     }
-  }
-})
-const client = new ApolloClient({
+  }),
   uri:"http://localhost:3001/graphql",
-  cache,
-  connectToDevTools: true, // Enable Apollo DevTools extension
-
 })
-
-
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
